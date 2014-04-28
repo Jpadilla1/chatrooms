@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Chats | {{ room.name }}{% endblock title %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+        {% for m in messages %}
+            <h4>{{ m.user.username }}</h4>
+            <p>{{ m }}</p>
+            <hr>
+        {% endfor %}
+            {% crispy form %}
+        </div>
+    </div>
+{% endblock content %}

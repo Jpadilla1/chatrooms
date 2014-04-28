@@ -1,4 +1,5 @@
 from django import forms
+from django.core.validators import MinLengthValidator
 
 from .models import ChatRoom
 
@@ -15,3 +16,11 @@ class CreateRoomForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(Submit('Create', 'Create', css_class='btn-lg btn-primary'))
+
+
+class EnrollRoomForm(forms.Form):
+    key = forms.CharField(max_length=15, required=True,
+                          validators=[MinLengthValidator(6), ])
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('Enroll', 'Enroll', css_class='btn-lg btn-primary'))
