@@ -1,0 +1,12 @@
+{% extends "base.html" %} 
+{% block title %}Chats | My rooms{% endblock title %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+        <h1>My Rooms</h1>
+            {% for room in myrooms %}
+               <p><a href="{% url 'chats:room' room.slug %}">{{ room }}</a></p> 
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

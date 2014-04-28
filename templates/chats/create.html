@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Chats | Create room{% endblock title %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            {% csrf_token %}
+            {% crispy form %}
+        </div>
+    </div>
+{% endblock content %}
