@@ -5,9 +5,11 @@ from ..chats.models import ChatRoom
 
 
 class Message(models.Model):
-    user = models.ForeignKey(User)
+    created_by = models.ForeignKey(User)
     room = models.ForeignKey(ChatRoom)
-    body = models.CharField(max_length=140)
+    created_at = models.DateTimeField(auto_now=False)
+    body = models.CharField(max_length=140,
+                            help_text='Max characters is 140.')
 
     def __unicode__(self):
         return self.body

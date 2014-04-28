@@ -10,7 +10,8 @@ class CreateMessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ('body',)
-        widgets = {'body': forms.Textarea(attrs={'cols': 80, 'rows': 5})}
+        widgets = {'body': forms.Textarea(
+            attrs={'cols': 80, 'rows': 5, 'wrap': 'hard'})}
         labels = {'body': 'Message'}
 
     helper = FormHelper()

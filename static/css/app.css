@@ -1,0 +1,10 @@
+.messages-bx {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 45vh;
+    position: relative;
+}
+.message {
+}
+p {
+}

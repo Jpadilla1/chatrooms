@@ -4,12 +4,20 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
-        {% for m in messages %}
-            <h4>{{ m.user.username }}</h4>
-            <p>{{ m }}</p>
-            <hr>
-        {% endfor %}
-            {% crispy form %}
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>{{ room.name }}</strong></div>
+                <div class="panel-body messages-bx">
+                    {% for m in room_messages %}
+                        <h4>{{ m.created_by.username }}</h4>
+                        <span>{{ m }}</span>
+                        <hr>
+                    {% endfor %}
+                </div>
+                <div class="panel-footer">
+                    {% crispy form %}
+                </div>
+            </div>
         </div>
     </div>
+
 {% endblock content %}

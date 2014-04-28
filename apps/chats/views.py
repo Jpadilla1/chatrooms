@@ -45,12 +45,11 @@ class RoomView(LoginRequiredMixin, FormMixin, DetailView):
             return redirect('chats:check', slug=kwargs['slug'])
 
     def get_context_data(self, **kwargs):
-        if 'view' not in kwargs:
-            kwargs['view'] = self
-        kwargs['form'] = self.form_class
-        kwargs['room'] = get_object_or_404(ChatRoom, slug=self.kwargs['slug'])
-        kwargs['messages'] = Message.objects.filter(room=kwargs['room'])
-        return kwargs
+        context = super(RoomView, self).get_context_data(**kwargs)
+        context['form'] = self.get_form(self.get_form_class())
+        context['room'] = get_object_or_404(ChatRoom, slug=self.kwargs['slug'])
+        context['room_messages'] = Message.objects.filter(room=context['room'])
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -78,11 +77,10 @@ class EnrollRoomView(LoginRequiredMixin, FormMixin, DetailView):
         return redirect('chats:room', slug=self.kwargs['slug'])
 
     def get_context_data(self, **kwargs):
-        if 'view' not in kwargs:
-            kwargs['view'] = self
-        kwargs['form'] = self.form_class
-        kwargs['room'] = get_object_or_404(ChatRoom, slug=self.kwargs['slug'])
-        return kwargs
+        context = super(EnrollRoomView, self).get_context_data(**kwargs)
+        context['form'] = self.get_form(self.get_form_class())
+        context['room'] = get_object_or_404(ChatRoom, slug=self.kwargs['slug'])
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
