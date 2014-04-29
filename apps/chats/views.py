@@ -1,3 +1,5 @@
+import datetime
+
 from django.views.generic import ListView, CreateView, DetailView
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.edit import FormMixin
@@ -6,7 +8,7 @@ from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
 
 from ..messages.forms import CreateMessageForm
 from ..messages.models import Message
-
+from ..users.models import User
 from .models import ChatRoom
 from .forms import CreateRoomForm, EnrollRoomForm
 
@@ -49,6 +51,10 @@ class RoomView(LoginRequiredMixin, FormMixin, DetailView):
         context['form'] = self.get_form(self.get_form_class())
         context['room'] = get_object_or_404(ChatRoom, slug=self.kwargs['slug'])
         context['room_messages'] = Message.objects.filter(room=context['room'])
+        users = User.objects.filter(
+            last_login__gt=self.request.user.last_logged_out,
+            is_active__exact=1, ).order_by('-last_login')
+        context['online_users'] = users
         return context
 
     def post(self, request, *args, **kwargs):
@@ -61,7 +67,8 @@ class RoomView(LoginRequiredMixin, FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.created_by = self.request.user
+        form.instance.created_at = datetime.datetime.now()
         form.instance.room = get_object_or_404(
             ChatRoom, slug=self.kwargs['slug'])
         form.save()

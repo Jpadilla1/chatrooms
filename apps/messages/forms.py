@@ -16,4 +16,5 @@ class CreateMessageForm(forms.ModelForm):
 
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.add_input(Submit('Post', 'Post', css_class='btn-lg btn-primary'))
+    helper.add_input(Submit(
+        'Send', 'Send', css_class='btn-lg btn-primary pull-right'))

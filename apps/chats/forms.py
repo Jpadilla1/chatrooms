@@ -15,7 +15,8 @@ class CreateRoomForm(forms.ModelForm):
 
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.add_input(Submit('Create', 'Create', css_class='btn-lg btn-primary'))
+    helper.add_input(Submit(
+        'Create', 'Create', css_class='btn-lg btn-primary pull-right'))
 
 
 class EnrollRoomForm(forms.Form):
@@ -23,4 +24,5 @@ class EnrollRoomForm(forms.Form):
                           validators=[MinLengthValidator(6), ])
     helper = FormHelper()
     helper.form_method = 'POST'
-    helper.add_input(Submit('Enroll', 'Enroll', css_class='btn-lg btn-primary'))
+    helper.add_input(Submit(
+        'Enroll', 'Enroll', css_class='btn-lg btn-primary pull-right'))

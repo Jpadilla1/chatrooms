@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+
 from .models import User
 
 
@@ -45,8 +48,11 @@ class SignupForm(forms.ModelForm):
         model = User
         fields = ('username', 'email')
 
+    helper = FormHelper()
+    helper.form_method = 'POST'
+    helper.add_input(Submit('Create', 'Create', css_class='btn-lg btn-primary'))
+
     def signup(self, request, user):
-        email = self.cleaned_data['email']
-        user.email = email
+        user.email = self.cleaned_data['email']
         user.username = self.cleaned_data['username']
         user.save()

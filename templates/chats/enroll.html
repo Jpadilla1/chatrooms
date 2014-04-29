@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Rooms | Enroll{% endblock title %}
+{% block title %}ChatRooms | Enroll{% endblock title %}
 {% block content %}
+<div class="container">
     <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
-        <h1>{{ room.name }}</h1>
+    <br>
+        <div class="col-sm-6 col-sm-offset-3 well clearfix">
+        <h1>{{ room.name }} - <span class="text-success">{{ room.members.count }} members</span></h1>
         <hr>
             {% crispy form %}
         </div>
     </div>
+</div>
 {% endblock content %}

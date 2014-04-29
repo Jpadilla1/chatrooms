@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}ChatRooms | Home{% endblock title %}
+{% block content %}
+<div id="get-started">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-12" id="greeting">
+                <h2 class="text-center">ChatRooms gives you, your personal room to chat with others.</h2>
+                <br>
+                <center> 
+                    <a href="{% url 'account_login' %}" class="btn btn-transparent btn-lg">Get Started</a>
+                </center>        
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

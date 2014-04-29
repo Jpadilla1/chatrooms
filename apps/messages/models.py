@@ -8,8 +8,8 @@ class Message(models.Model):
     created_by = models.ForeignKey(User)
     room = models.ForeignKey(ChatRoom)
     created_at = models.DateTimeField(auto_now=False)
-    body = models.CharField(max_length=140,
-                            help_text='Max characters is 140.')
+    body = models.CharField(max_length=400,
+                            help_text='Max characters is 400.')
 
     def __unicode__(self):
         return self.body

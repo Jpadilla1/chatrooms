@@ -1,5 +1,8 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.signals import user_logged_out
 
 
 class MyUserManager(BaseUserManager):
@@ -32,6 +35,7 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    last_logged_out = models.DateTimeField(auto_now=True)
 
     objects = MyUserManager()
 
@@ -56,3 +60,9 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+def update_logged_out(sender, user, request, **kwargs):
+    user.last_logged_out = datetime.datetime.now()
+
+user_logged_out.connect(update_logged_out)

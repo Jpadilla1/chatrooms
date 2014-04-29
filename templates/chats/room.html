@@ -1,23 +1,37 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Chats | {{ room.name }}{% endblock title %}
+{% block title %}ChatRooms | {{ room.name }}{% endblock title %}
 {% block content %}
+<div class="container">
     <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
+    <br>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Online Members</strong></div>
+                <div class="panel-body messages-bx">
+                    {% for u in online_users %}
+                        <p>{{ u }}</p>
+                    {% endfor %}
+                </div>
+                <div class="panel-footer clearfix">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-heading"><strong>{{ room.name }}</strong></div>
                 <div class="panel-body messages-bx">
                     {% for m in room_messages %}
-                        <h4>{{ m.created_by.username }}</h4>
-                        <span>{{ m }}</span>
+                        <h4>{{ m.created_by.username }} | {{ m.created_at|timesince }} ago</h4>
+                        <p class="message">{{ m }}</p>
                         <hr>
                     {% endfor %}
                 </div>
-                <div class="panel-footer">
+                <div class="panel-footer clearfix">
                     {% crispy form %}
                 </div>
             </div>
         </div>
     </div>
-
+</div>
 {% endblock content %}

@@ -1,11 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Chats{% endblock title %}
+{% block title %}ChatRooms | Available rooms{% endblock title %}
 {% block content %}
+<div class="container">
     <div class="row">
+    <br>
         <div class="col-sm-6 col-sm-offset-3">
+            {% if object_list|length > 0 %}
+                <h2>Available rooms</h2>
+                <hr>
             {% for room in object_list %}
-                <p><a href="{% url 'chats:room' room.slug %}">{{ room }}</a></p>
+                <p class="lead"><a href="{% url 'chats:room' room.slug %}">{{ room }}</a> - <span class="text-success">{{ room.members.count }} members</span></p>
             {% endfor %}
+            
+            {% else %}
+                <h2>No available rooms. If you are an administrator, you can create a room <a href="{% url 'chats:create' %}">here</a>.</h2>
+            {% endif %}
+
         </div>
     </div>
+</div>
 {% endblock content %}

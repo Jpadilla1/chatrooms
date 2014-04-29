@@ -5,6 +5,41 @@
     position: relative;
 }
 .message {
+    font-size: 16px;
 }
-p {
+#get-started {
+    background: url('../img/ocean.jpg') no-repeat;
+    background-size: cover;
+    display: block;
+    height: 93vh;
+    max-height: 93vh;
+}
+#greeting {
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.6);
+    margin-top: 25vh;
+}
+.navbar {
+    margin-bottom: 0;
+}
+.btn-transparent {
+    padding: 11px 17px;
+    font-size: 20px;
+    letter-spacing: 0.15em;
+    color: #999;
+    background-color: rgba(255, 255, 255, 0);
+    border-color: #999;
+    transition: all 0.6s ease;
+    -webkit-transition: all 0.6s ease;
+    -moz-transition: all 0.6s ease;
+    -o-transition: all 0.6s ease;
+}
+.btn-transparent:hover, .btn-transparent:focus {
+    color: #fff;
+    background-color: #428bca;
+    border-color: #fff;
+}
+ul {
+    list-style-type: none;
+    padding-left: 0;
 }

@@ -137,3 +137,5 @@ TEMPLATE_DIRS = (
 )
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
