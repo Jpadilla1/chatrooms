@@ -57,7 +57,7 @@ var ajax_call = function() {
             var html = "";
             d = $.parseJSON(messages);
             $.each(d, function(i, item) {
-                html += "<h4 id='message_" + item.id + "'>" + item.created_by + " | " + item.created_at +" </h4>" + "<p class='message'>" + item.body + "</p>" + "<hr>";
+                html += "<h4 id='message_" + item.pk + "'>" + item.created_by + " | " + item.created_at +" </h4>" + "<p class='message'>" + item.body + "</p>" + "<hr>";
             });
             $('#messages').html(html);
 

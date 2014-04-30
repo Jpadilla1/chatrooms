@@ -79,6 +79,7 @@ class RoomView(JSONResponseMixin, AjaxResponseMixin,
             room__slug=kwargs['slug'])
         m = []
         for i in json.loads(serializers.serialize('json', messages)):
+            i['fields']['pk'] = i['pk']
             i['fields']['created_by'] = get_object_or_404(
                 User, pk=i['fields']['created_by']).username
             i['fields']['created_at'] = naturaltime(
