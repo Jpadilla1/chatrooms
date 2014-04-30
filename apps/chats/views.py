@@ -57,7 +57,8 @@ class RoomView(JSONResponseMixin, AjaxResponseMixin,
         context['form'] = self.get_form(self.get_form_class())
         context['room'] = get_object_or_404(ChatRoom, slug=self.kwargs['slug'])
         context['room_messages'] = Message.objects.filter(room=context['room'])
-        context['room_message_last'] = context['room_messages'].last().id - 1
+        if context['room_messages'].count() > 0:
+            context['room_message_last'] = context['room_messages'].last().id-1
         users = User.objects.filter(
             last_login__gt=self.request.user.last_logged_out,
             is_active__exact=1, ).order_by('-last_login')
@@ -85,13 +86,14 @@ class RoomView(JSONResponseMixin, AjaxResponseMixin,
             m.append(i['fields'])
         data = {
             'messages': json.dumps(m),
-            'last_message_id': messages.last().id - 1,
             'online_users': json.dumps(list(ChatRoom.objects.get(
                 slug=kwargs['slug']).members.filter(
                     last_login__gt=self.request.user.last_logged_out,
                     is_active__exact=1, ).order_by(
                         '-last_login').values('username')))
         }
+        if messages.count() > 0:
+            data['last_message_id'] = messages.last().id - 1
         return self.render_json_response(data)
 
     def form_valid(self, form):
