@@ -23,7 +23,7 @@
                 <div class="panel-heading"><strong>{{ room.name }}</strong></div>
                 <div class="panel-body messages-bx" id="messages">
                     {% for m in room_messages %}
-                        <h4>{{ m.created_by.username }} | {{ m.created_at|naturaltime }}</h4>
+                        <h4 id="message_{{ forloop.counter0 }}">{{ m.created_by.username }} | {{ m.created_at|naturaltime }}</h4>
                         <p class="message">{{ m }}</p>
                         <hr>
                     {% endfor %}
@@ -57,13 +57,17 @@ var ajax_call = function() {
             var html = "";
             d = $.parseJSON(messages);
             $.each(d, function(i, item) {
-                html += "<h4>" + item.created_by + " | " + item.created_at +" </h4>" + "<p class='message'>" + item.body + "</p>" + "<hr>";
+                html += "<h4 id='message_" + i + "'>" + item.created_by + " | " + item.created_at +" </h4>" + "<p class='message'>" + item.body + "</p>" + "<hr>";
             });
             $('#messages').html(html);
+
+            location.href = '#message_' + data['last_message_id'];
         },
 
     });
 };
+
+location.href = '#message_' + {{ room_message_last }};
 
 var interval = 1000 * 10;
 

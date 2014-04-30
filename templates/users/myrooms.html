@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
             {% if myrooms|length > 0 %}
-                <h1>My Rooms</h1>
+                <h2>My Rooms</h2>
                 <hr>
                 {% for room in myrooms %}
                    <p class="lead"><a href="{% url 'chats:room' room.slug %}">{{ room }}</a> - <span class="text-success">{{ room.members.count }} members</span></p>
