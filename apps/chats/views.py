@@ -1,16 +1,21 @@
 import datetime
+import json
 
+from dateutil.parser import parse
 from django.views.generic import ListView, CreateView, DetailView
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic.edit import FormMixin
+from django.core import serializers
 
-from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
+from braces.views import (LoginRequiredMixin, StaffuserRequiredMixin,
+                          JSONResponseMixin, AjaxResponseMixin)
 
 from ..messages.forms import CreateMessageForm
 from ..messages.models import Message
 from ..users.models import User
 from .models import ChatRoom
 from .forms import CreateRoomForm, EnrollRoomForm
+from ..utils.utils import naturaltime
 
 
 class RoomsView(LoginRequiredMixin, ListView):
@@ -30,7 +35,8 @@ class CreateRoomView(LoginRequiredMixin, StaffuserRequiredMixin, CreateView):
         return redirect('users:myrooms')
 
 
-class RoomView(LoginRequiredMixin, FormMixin, DetailView):
+class RoomView(JSONResponseMixin, AjaxResponseMixin,
+               LoginRequiredMixin, FormMixin, DetailView):
     model = ChatRoom
     form_class = CreateMessageForm
     template_name = "chats/room.html"
@@ -65,6 +71,26 @@ class RoomView(LoginRequiredMixin, FormMixin, DetailView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def get_ajax(self, request, *args, **kwargs):
+        messages = Message.objects.filter(
+            room__slug=kwargs['slug'])
+        m = []
+        for i in json.loads(serializers.serialize('json', messages)):
+            i['fields']['created_by'] = get_object_or_404(
+                User, pk=i['fields']['created_by']).username
+            i['fields']['created_at'] = naturaltime(
+                parse(i['fields']['created_at']))
+            m.append(i['fields'])
+        data = {
+            'messages': json.dumps(m),
+            'online_users': json.dumps(list(ChatRoom.objects.get(
+                slug=kwargs['slug']).members.filter(
+                    last_login__gt=self.request.user.last_logged_out,
+                    is_active__exact=1, ).order_by(
+                        '-last_login').values('username')))
+        }
+        return self.render_json_response(data)
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user

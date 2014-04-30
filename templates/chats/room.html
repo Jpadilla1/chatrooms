@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 {% block title %}ChatRooms | {{ room.name }}{% endblock title %}
 {% block content %}
@@ -8,9 +9,9 @@
         <div class="col-sm-4">
             <div class="panel panel-default">
                 <div class="panel-heading"><strong>Online Members</strong></div>
-                <div class="panel-body messages-bx">
+                <div class="panel-body messages-bx" id="online_users">
                     {% for u in online_users %}
-                        <p>{{ u }}</p>
+                        <p>{{ u.username }}</p>
                     {% endfor %}
                 </div>
                 <div class="panel-footer clearfix">
@@ -20,9 +21,9 @@
         <div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-heading"><strong>{{ room.name }}</strong></div>
-                <div class="panel-body messages-bx">
+                <div class="panel-body messages-bx" id="messages">
                     {% for m in room_messages %}
-                        <h4>{{ m.created_by.username }} | {{ m.created_at|timesince }} ago</h4>
+                        <h4>{{ m.created_by.username }} | {{ m.created_at|naturaltime }}</h4>
                         <p class="message">{{ m }}</p>
                         <hr>
                     {% endfor %}
@@ -35,3 +36,37 @@
     </div>
 </div>
 {% endblock content %}
+{% block extra_js %}
+<script type="text/javascript">
+var ajax_call = function() {
+  $.ajax({
+        type: "GET",
+        url: "/chats/{{ room.slug }}/",
+        data: {},
+        dataType: 'json',
+        success : function(data, textStatus, jqXHR)
+        {   
+            ou = data.online_users;
+            var html = "";
+            d = $.parseJSON(ou);
+            $.each(d, function(i, item) {
+                html += "<p>" + item.username +"</p>";
+            });
+            $('#online_users').html(html);
+            messages = data.messages;
+            var html = "";
+            d = $.parseJSON(messages);
+            $.each(d, function(i, item) {
+                html += "<h4>" + item.created_by + " | " + item.created_at +" </h4>" + "<p class='message'>" + item.body + "</p>" + "<hr>";
+            });
+            $('#messages').html(html);
+        },
+
+    });
+};
+
+var interval = 1000 * 10;
+
+setInterval(ajax_call, interval);
+</script>
+{% endblock extra_js %}

@@ -9,7 +9,7 @@ from ..users.models import User
 class ChatRoom(models.Model):
     name = models.CharField(max_length=30, unique=True)
     created_by = models.ForeignKey(User)
-    members = models.ManyToManyField(User, related_name="members")
+    members = models.ManyToManyField(User, related_name="room_members")
     slug = AutoSlugField(populate_from='name')
     key = models.CharField(
         max_length=15,
