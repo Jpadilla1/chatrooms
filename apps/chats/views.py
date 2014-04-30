@@ -59,9 +59,10 @@ class RoomView(JSONResponseMixin, AjaxResponseMixin,
         context['room_messages'] = Message.objects.filter(room=context['room'])
         if context['room_messages'].count() > 0:
             context['room_message_last'] = context['room_messages'].last().id
-        users = User.objects.filter(
-            last_login__gt=self.request.user.last_logged_out,
-            is_active__exact=1, ).order_by('-last_login')
+        users = ChatRoom.objects.get(
+            slug=self.kwargs['slug']).members.filter(
+                last_login__gt=self.request.user.last_logged_out,
+                is_active__exact=1, ).order_by('-last_login')
         context['online_users'] = users
         return context
 
