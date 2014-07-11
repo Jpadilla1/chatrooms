@@ -1,3 +1,6 @@
+*.log
+*.pot
+*.pyc
 venv
 *.sqlite3
-*.pyc
+*.env

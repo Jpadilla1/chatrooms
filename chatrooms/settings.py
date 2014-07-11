@@ -1,154 +1,145 @@
-"""
-Django settings for chatrooms project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+from configurations import Configuration, values
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+class Common(Configuration):
+    BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8h75u%6a4ek^e+8_rr!yd!xs0ejf9ous&q)^=6boxukq*b#mna'
+    ENVIRONMENT = values.Value(environ_prefix=None, default='DEVELOPMENT')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+    SECRET_KEY = values.SecretValue(environ_prefix=None)
 
-TEMPLATE_DEBUG = True
+    DEBUG = values.BooleanValue(False)
 
-ALLOWED_HOSTS = []
+    TEMPLATE_DEBUG = values.BooleanValue(DEBUG)
 
+    ALLOWED_HOSTS = []
 
-# Application definition
+    # Application definition
+    INSTALLED_APPS = (
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'django.contrib.sites',
 
-INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'django.contrib.humanize',
+        # Third Party
+        'debug_toolbar',
+        'django_extensions',
+        # 'rest_framework',
+        # 'rest_framework_swagger',
+        
+        # Apps
+        'chatrooms.users',
+        'chatrooms.messages',
+        'chatrooms.rooms',
+    )
 
-    # Apps
-    'apps.users',
-    'apps.chats',
-    'apps.messages',
+    MIDDLEWARE_CLASSES = (
+        'djangosecure.middleware.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    )
 
-    # Third party
-    'crispy_forms',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-)
+    # Rest Framework Settings
+    REST_FRAMEWORK = {
+        'DEFAULT_MODEL_SERIALIZER_CLASS':
+        'rest_framework.serializers.HyperlinkedModelSerializer',
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+        # 'DEFAULT_PERMISSION_CLASSES': (
+        #     'rest_framework.permissions.IsAuthenticated',
+        # ),
+        'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+        ),
+        'PAGINATE_BY': 25,
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    # Required by allauth template tags
-    "django.core.context_processors.request",
-    "django.contrib.auth.context_processors.auth",
-
-    # allauth specific context processors
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
-)
-
-AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
-    "django.contrib.auth.backends.ModelBackend",
-
-    # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
-)
-
-ROOT_URLCONF = 'chatrooms.urls'
-
-WSGI_APPLICATION = 'chatrooms.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.UnicodeJSONRenderer',
+            'rest_framework.renderers.BrowsableAPIRenderer',
+        )
     }
-}
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
+    # Swagger Rest Framework Doc Settings
+    SWAGGER_SETTINGS = {
+        "exclude_namespaces": [],
+        "api_version": '0.1',
+        "api_path": "/",
+        "enabled_methods": [
+            'get',
+            'post',
+            # 'put',
+            # 'patch',
+            'delete'
+        ],
+        "api_key": '',
+        "is_authenticated": False,
+        "is_superuser": False,
+    }
 
-LANGUAGE_CODE = 'en-us'
+    ROOT_URLCONF = 'chatrooms.urls'
 
-TIME_ZONE = 'UTC'
+    WSGI_APPLICATION = 'chatrooms.wsgi.application'
 
-USE_I18N = True
+    # Database
+    # https://docs.djangoproject.com/en/dev/ref/settings/#databases
+    DATABASES = values.DatabaseURLValue(
+        'sqlite:///{}'.format(os.path.join(BASE_DIR, 'db.sqlite3')))
 
-USE_L10N = True
+    # Internationalization
+    # https://docs.djangoproject.com/en/1.6/topics/i18n/
+    LANGUAGE_CODE = 'en-us'
 
-USE_TZ = True
+    TIME_ZONE = 'UTC'
+
+    USE_I18N = True
+
+    USE_L10N = True
+
+    USE_TZ = True
+
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/1.6/howto/static-files/
+    STATIC_ROOT = 'static'
+
+    STATIC_URL = '/static/'
+
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'static'),
+    )
+
+    TEMPLATE_DIRS = (
+        os.path.join(BASE_DIR, 'templates'),
+    )
+
+    SITE_ID = 1
+
+    AUTH_USER_MODEL = 'users.User'
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+class Development(Common):
+    DEBUG = True
 
-STATIC_URL = '/static/'
+    TEMPLATE_DEBUG = DEBUG
 
-SITE_ID = 1
+    PROTOCOL = 'http'
 
-AUTH_USER_MODEL = 'users.User'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# auth and allauth settings
-LOGIN_REDIRECT_URL = '/accounts/rooms/'
-LOGIN_URL = '/accounts/login/'
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Chat] '
-ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_LOGOUT_REDIRECT_URL = LOGIN_URL
-ACCOUNT_USERNAME_BLACKLIST = ['admin']
-ACCOUNT_SIGNUP_FORM_CLASS = 'apps.users.forms.SignupForm'
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+    # Dummy cache for development
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
-
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES['default'] = dj_database_url.config()
-
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Allow all host headers
-ALLOWED_HOSTS = ['*']
-
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+class Production(Common):
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False

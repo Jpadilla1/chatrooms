@@ -5,7 +5,7 @@ from autoslug import AutoSlugField
 from ..users.models import User
 
 
-class ChatRoom(models.Model):
+class Room(models.Model):
     name = models.CharField(max_length=30, unique=True)
     created_by = models.ForeignKey(User)
     members = models.ManyToManyField(User, related_name="room_members")
