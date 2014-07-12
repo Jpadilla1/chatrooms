@@ -121,7 +121,7 @@ class Common(Configuration):
 
     SITE_ID = 1
 
-    # AUTH_USER_MODEL = 'users.User'
+    AUTH_USER_MODEL = 'users.User'
 
 
 class Development(Common):
