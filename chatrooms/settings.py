@@ -29,9 +29,9 @@ class Common(Configuration):
         # Third Party
         'debug_toolbar',
         'django_extensions',
-        # 'rest_framework',
-        # 'rest_framework_swagger',
-        
+        'rest_framework',
+        'rest_framework_swagger',
+
         # Apps
         'chatrooms.users',
         'chatrooms.messages',
@@ -75,8 +75,8 @@ class Common(Configuration):
         "enabled_methods": [
             'get',
             'post',
-            # 'put',
-            # 'patch',
+            'put',
+            'patch',
             'delete'
         ],
         "api_key": '',
@@ -121,7 +121,7 @@ class Common(Configuration):
 
     SITE_ID = 1
 
-    AUTH_USER_MODEL = 'users.User'
+    # AUTH_USER_MODEL = 'users.User'
 
 
 class Development(Common):

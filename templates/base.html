@@ -1,4 +1,5 @@
-<!doctype html>{% load staticfiles %}
+<!doctype html>
+{% load staticfiles %}
 <html lang="en">
 
 <head>
@@ -11,11 +12,11 @@
 </head>
 
 <body>
-    {% block header %} 
-    {% endblock header %} 
+    <header>
+        {% block header %}{% endblock header %} 
+    </header>
 
-    {% block content %}
-    {% endblock content %}
+    {% block content %}{% endblock content %}
 
 </body>
     
