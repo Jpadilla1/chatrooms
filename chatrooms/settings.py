@@ -26,6 +26,7 @@ class Common(Configuration):
         'django.contrib.staticfiles',
 
         # Third Party
+        'ws4redis',
         'debug_toolbar',
         'django_extensions',
         'rest_framework',
@@ -119,6 +120,8 @@ class Common(Configuration):
     )
 
     AUTH_USER_MODEL = 'users.User'
+
+    WEBSOCKET_URL = '/ws/'
 
 
 class Development(Common):
