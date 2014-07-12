@@ -24,7 +24,6 @@ class Common(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'django.contrib.sites',
 
         # Third Party
         'debug_toolbar',
@@ -34,12 +33,10 @@ class Common(Configuration):
 
         # Apps
         'chatrooms.users',
-        'chatrooms.messages',
         'chatrooms.rooms',
     )
 
     MIDDLEWARE_CLASSES = (
-        'djangosecure.middleware.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
@@ -53,24 +50,26 @@ class Common(Configuration):
         'DEFAULT_MODEL_SERIALIZER_CLASS':
         'rest_framework.serializers.HyperlinkedModelSerializer',
 
-        # 'DEFAULT_PERMISSION_CLASSES': (
-        #     'rest_framework.permissions.IsAuthenticated',
-        # ),
         'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
+            'rest_framework.permissions.IsAuthenticated',
         ),
         'PAGINATE_BY': 25,
 
         'DEFAULT_RENDERER_CLASSES': (
             'rest_framework.renderers.UnicodeJSONRenderer',
             'rest_framework.renderers.BrowsableAPIRenderer',
-        )
+        ),
+        'DEFAULT_FILTER_BACKENDS': (
+            'rest_framework.filters.DjangoFilterBackend',
+            'rest_framework.filters.SearchFilter',
+            'rest_framework.filters.OrderingFilter',
+        ),
     }
 
     # Swagger Rest Framework Doc Settings
     SWAGGER_SETTINGS = {
         "exclude_namespaces": [],
-        "api_version": '0.1',
+        "api_version": '1.0',
         "api_path": "/",
         "enabled_methods": [
             'get',
@@ -107,7 +106,7 @@ class Common(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/1.6/howto/static-files/
-    STATIC_ROOT = 'static'
+    # STATIC_ROOT = 'static'
 
     STATIC_URL = '/static/'
 
@@ -118,8 +117,6 @@ class Common(Configuration):
     TEMPLATE_DIRS = (
         os.path.join(BASE_DIR, 'templates'),
     )
-
-    SITE_ID = 1
 
     AUTH_USER_MODEL = 'users.User'
 

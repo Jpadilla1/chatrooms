@@ -1,56 +1,36 @@
 from django.db import models
-from django.utils import timezone
-from django.core import validators
 from django.contrib.auth.models import AbstractBaseUser
 
-from .managers import UserManager
 from .utils import get_gravatar_url
+from .managers import UserManager
 
 
 class User(AbstractBaseUser):
-    class Meta:
-        ordering = ['username', ]
-
-    username = models.CharField(
-        'username', max_length=30, unique=True,
-        help_text='Required. 30 characters or fewer. Letters, digits and '
-                  '@/./+/-/_ only.',
-        validators=[
-            validators.RegexValidator(
-                r'^[\w.@+-]+$',
-                'Enter a valid username. '
-                'This value may contain only letters, numbers '
-                'and @/./+/-/_ characters.', 'invalid'),
-        ],
-        error_messages={
-            'unique': "A user with that username already exists.",
-        })
-
+    username = models.CharField(max_length=15, unique=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
     gravatar_url = models.URLField(blank=True)
-    email = models.EmailField('email address', blank=True, unique=True)
-    is_staff = models.BooleanField(
-        'staff status', default=False,
-        help_text='Designates whether the user can log into this admin '
-                  'site.')
-    is_active = models.BooleanField(
-        'active', default=True,
-        help_text='Designates whether this user should be treated as '
-                  'active. Unselect this instead of deleting accounts.')
-    date_joined = models.DateTimeField('date joined', default=timezone.now)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+
+    def get_full_name(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
+    def get_short_name(self):
+        return self.first_name
 
     def __str__(self):
-        return self.username
-
-    def save(self, *args, **kwargs):
-        if not self.pk or self.has_field_changed('email'):
-            self.gravatar_url = get_gravatar_url(self.email)
-
-        return super(User, self).save(*args, **kwargs)
+        return self.email
 
     def has_perm(self, perm, obj=None):
         return True
@@ -61,3 +41,9 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.gravatar_url = get_gravatar_url(self.email)
+
+        return super(User, self).save(*args, **kwargs)

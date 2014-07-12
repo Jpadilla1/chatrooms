@@ -1,6 +1,9 @@
-from django.conf.urls import patterns, url
+from rest_framework import routers
+
+from .views import UserViewSet
 
 
-urlpatterns = patterns(
-    '',
-)
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+
+api_urlpatterns = router.urls
