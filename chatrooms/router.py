@@ -14,5 +14,5 @@ def get_api_urlpatterns(apps):
 
 urlpatterns = get_api_urlpatterns([
     'users',
-    # 'rooms',
+    'rooms',
 ])

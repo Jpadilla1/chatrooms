@@ -35,6 +35,15 @@ class Common(Configuration):
         # Apps
         'chatrooms.users',
         'chatrooms.rooms',
+        'chatrooms.messages',
+    )
+
+    from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
+    TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+        'django.contrib.auth.context_processors.auth',
+        'django.core.context_processors.static',
+        'ws4redis.context_processors.default',
     )
 
     MIDDLEWARE_CLASSES = (
@@ -52,7 +61,7 @@ class Common(Configuration):
         'rest_framework.serializers.HyperlinkedModelSerializer',
 
         'DEFAULT_PERMISSION_CLASSES': (
-            'rest_framework.permissions.IsAuthenticated',
+            'rest_framework.permissions.AllowAny',
         ),
         'PAGINATE_BY': 25,
 
@@ -122,6 +131,17 @@ class Common(Configuration):
     AUTH_USER_MODEL = 'users.User'
 
     WEBSOCKET_URL = '/ws/'
+    WS4REDIS_ALLOWED_CHANNELS = ['subscribe-room', ]
+    WS4REDIS_EXPIRE = 7200
+    WS4REDIS_PREFIX = 'ws'
+    WSGI_APPLICATION = 'ws4redis.django_runserver.application'
+    WS4REDIS_HEARTBEAT = '--heartbeat--'
+    WS4REDIS_CONNECTION = {
+        'host': 'localhost',
+        'port': 6379,
+    }
+    SESSION_ENGINE = 'redis_sessions.session'
+    SESSION_REDIS_PREFIX = 'session'
 
 
 class Development(Common):

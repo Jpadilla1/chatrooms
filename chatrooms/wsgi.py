@@ -9,12 +9,21 @@ https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 
 import os
 
+from django.conf import settings
+from ws4redis.uwsgi_runserver import uWSGIWebsocketServer
+from configurations.wsgi import get_wsgi_application
+
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT').title()
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chatrooms.settings')
 os.environ.setdefault('DJANGO_CONFIGURATION', ENVIRONMENT)
 
-from configurations.wsgi import get_wsgi_application
+_django_app = get_wsgi_application()
+_websocket_app = uWSGIWebsocketServer()
 
-application = get_wsgi_application()
+
+def application(environ, start_response):
+    if environ.get('PATH_INFO').startswith(settings.WEBSOCKET_URL):
+        return _websocket_app(environ, start_response)
+    return _django_app(environ, start_response)
