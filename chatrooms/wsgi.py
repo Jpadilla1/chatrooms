@@ -8,11 +8,14 @@ https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 """
 
 import os
+import sys
 
 from django.conf import settings
 from ws4redis.uwsgi_runserver import uWSGIWebsocketServer
 from configurations.wsgi import get_wsgi_application
 
+
+sys.path.insert(0, os.path.abspath('..'))
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT').title()
 

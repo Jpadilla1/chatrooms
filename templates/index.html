@@ -4,6 +4,49 @@
 	Chatrooms API
 {% endblock title %}
 
-{% block header %}
-	
-{% endblock header %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Chatrooms Demo</h1>
+        <hr>
+
+        <section id="messages">
+            
+        </section>
+
+        <div class="form-wrapper">
+            {% csrf_token %}
+            <textarea name="text_message" id="text_message" cols="50" rows="10" wrap="hard"></textarea>
+            <br>
+            <center>
+                <button id="send_message">Send</button>
+            </center>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $(document).ready(function($) {
+        var ws4redis = WS4Redis({
+            uri: '{{ WEBSOCKET_URI }}demo?subscribe-broadcast&echo',
+            receive_message: receiveMessage,
+            heartbeat_msg: {{ WS4REDIS_HEARTBEAT }}
+        });
+
+        // send message though the Websocket to the server
+        $('#send_message').click(function() {
+            $.post('', {
+                csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+                message: $('#text_message').val()
+            });
+        });
+
+        // receive a message though the Websocket from the server
+        function receiveMessage(msg) {
+            console.log(msg);
+            $('#messages').append(
+                "<div class='message'>" + msg + "</div>");
+        }
+    });
+    </script>        
+{% endblock extra_js %}

@@ -16,6 +16,9 @@ class Common(Configuration):
 
     ALLOWED_HOSTS = []
 
+    SESSION_ENGINE = 'redis_sessions.session'
+    SESSION_REDIS_PREFIX = 'session'
+
     # Application definition
     INSTALLED_APPS = (
         'django.contrib.admin',
@@ -31,6 +34,7 @@ class Common(Configuration):
         'django_extensions',
         'rest_framework',
         'rest_framework_swagger',
+        'corsheaders',
 
         # Apps
         'chatrooms.users',
@@ -38,9 +42,7 @@ class Common(Configuration):
         'chatrooms.messages',
     )
 
-    from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
-
-    TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    TEMPLATE_CONTEXT_PROCESSORS = (
         'django.contrib.auth.context_processors.auth',
         'django.core.context_processors.static',
         'ws4redis.context_processors.default',
@@ -48,11 +50,11 @@ class Common(Configuration):
 
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
+        'corsheaders.middleware.CorsMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware',
     )
 
     # Rest Framework Settings
@@ -95,8 +97,6 @@ class Common(Configuration):
 
     ROOT_URLCONF = 'chatrooms.urls'
 
-    WSGI_APPLICATION = 'chatrooms.wsgi.application'
-
     # Database
     # https://docs.djangoproject.com/en/dev/ref/settings/#databases
     DATABASES = values.DatabaseURLValue(
@@ -130,18 +130,37 @@ class Common(Configuration):
 
     AUTH_USER_MODEL = 'users.User'
 
-    WEBSOCKET_URL = '/ws/'
-    WS4REDIS_ALLOWED_CHANNELS = ['subscribe-room', ]
-    WS4REDIS_EXPIRE = 7200
-    WS4REDIS_PREFIX = 'ws'
     WSGI_APPLICATION = 'ws4redis.django_runserver.application'
+
+    WEBSOCKET_URL = '/ws/'
+    # WS4REDIS_ALLOWED_CHANNELS = ['subscribe-room', 'subscribe-demo', ]
+    WS4REDIS_EXPIRE = 7200
+
     WS4REDIS_HEARTBEAT = '--heartbeat--'
     WS4REDIS_CONNECTION = {
         'host': 'localhost',
         'port': 6379,
     }
-    SESSION_ENGINE = 'redis_sessions.session'
-    SESSION_REDIS_PREFIX = 'session'
+
+    # CORS settings
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_URLS_REGEX = r'^/api-v1/.*$'
+    CORS_ALLOW_METHODS = (
+        'GET',
+        'POST',
+        'PUT',
+        'PATCH',
+        'DELETE',
+        'OPTIONS'
+    )
+    CORS_ALLOW_HEADERS = (
+        'x-requested-with',
+        'content-type',
+        'accept',
+        'origin',
+        'authorization',
+        'x-csrftoken'
+    )
 
 
 class Development(Common):
