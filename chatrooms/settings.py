@@ -163,6 +163,7 @@ class Common(Configuration):
         'authorization',
         'x-csrftoken'
     )
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 class Development(Common):
@@ -184,4 +185,3 @@ class Development(Common):
 
 class Production(Common):
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
