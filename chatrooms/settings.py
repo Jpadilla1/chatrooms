@@ -138,7 +138,7 @@ class Common(Configuration):
 
     WS4REDIS_HEARTBEAT = '--heartbeat--'
     WS4REDIS_HOST = values.Value(environ_prefix=None, default='localhost')
-    WS4REDIS_PORT = values.Value(environ_prefix=None, default=6379)
+    WS4REDIS_PORT = values.IntegerValue(environ_prefix=None, default=6379)
     WS4REDIS_CONNECTION = {
         'host': WS4REDIS_HOST,
         'port': WS4REDIS_PORT,
