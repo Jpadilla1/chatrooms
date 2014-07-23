@@ -14,7 +14,7 @@ class Common(Configuration):
 
     TEMPLATE_DEBUG = values.BooleanValue(DEBUG)
 
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*', ]
 
     SESSION_ENGINE = 'redis_sessions.session'
     SESSION_REDIS_PREFIX = 'session'
@@ -62,9 +62,9 @@ class Common(Configuration):
         'DEFAULT_MODEL_SERIALIZER_CLASS':
         'rest_framework.serializers.HyperlinkedModelSerializer',
 
-        'DEFAULT_PERMISSION_CLASSES': (
-            'rest_framework.permissions.AllowAny',
-        ),
+        # 'DEFAULT_PERMISSION_CLASSES': (
+        #     'rest_framework.permissions.AllowAny',
+        # ),
         'PAGINATE_BY': 25,
 
         'DEFAULT_RENDERER_CLASSES': (
@@ -116,7 +116,8 @@ class Common(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/1.6/howto/static-files/
-    # STATIC_ROOT = 'static'
+
+    STATIC_ROOT = 'staticfiles'
 
     STATIC_URL = '/static/'
 
@@ -133,13 +134,14 @@ class Common(Configuration):
     WSGI_APPLICATION = 'ws4redis.django_runserver.application'
 
     WEBSOCKET_URL = '/ws/'
-    # WS4REDIS_ALLOWED_CHANNELS = ['subscribe-room', 'subscribe-demo', ]
     WS4REDIS_EXPIRE = 7200
 
     WS4REDIS_HEARTBEAT = '--heartbeat--'
+    WS4REDIS_HOST = values.Value(environ_prefix=None, default='localhost')
+    WS4REDIS_PORT = values.Value(environ_prefix=None, default=6379)
     WS4REDIS_CONNECTION = {
-        'host': 'localhost',
-        'port': 6379,
+        'host': WS4REDIS_HOST,
+        'port': WS4REDIS_PORT,
     }
 
     # CORS settings
@@ -182,3 +184,4 @@ class Development(Common):
 
 class Production(Common):
     DEBUG_TOOLBAR_PATCH_SETTINGS = False
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
