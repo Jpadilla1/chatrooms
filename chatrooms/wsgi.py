@@ -10,11 +10,8 @@ https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 import os
 import sys
 
-from dj_static import Cling
 from django.conf import settings
 from ws4redis.uwsgi_runserver import uWSGIWebsocketServer
-from configurations.wsgi import get_wsgi_application
-
 
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -22,6 +19,9 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT').title()
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chatrooms.settings')
 os.environ.setdefault('DJANGO_CONFIGURATION', ENVIRONMENT)
+
+from dj_static import Cling
+from configurations.wsgi import get_wsgi_application
 
 _django_app = Cling(get_wsgi_application())
 _websocket_app = uWSGIWebsocketServer()
